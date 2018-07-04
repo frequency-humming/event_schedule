@@ -1,0 +1,69 @@
+<a href="/users/<%= current_user.id %>">Edit My Profile</a>
+<h1>Welcome, <%= current_user.first_name %> </h1>
+<h3>Here are some of the events at your state:</h3>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Host</th>
+        <th>Action/Status</th>
+    </tr>
+    <% @event.each do |event|%>
+    <tr>
+    <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+    <td><%= event.date %></td>
+    <td><%= event.location %></td>
+    <td><%= event.user.first_name %></td>
+    <% if event.users.include? current_user %>
+        <td>Joining <a href="/events/<%= event.id %>/delete" rel="nofollow" data-method="delete">Cancel</a></td>
+    <% elsif event.user==current_user %>
+        <td><a href="/events/<%= event.id %>" rel="nofollow" data-method="delete">Delete</a></td>
+    <%else%>
+        <td><a href="/events/<%= event.id %>/join" rel="nofollow" data-method="post">Join</a></td>
+    <%end%>
+    <%end%>
+    
+</table>
+<h3>Here are some of the events on other states:</h3>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>State</th>
+        <th>Host</th>
+        <th>Action/Status</th>
+    </tr>
+    
+        <% @events.each do |event|%>
+    <tr>
+            <td><a href="/events/<%= event.id %>"><%= event.name %></td>
+            <td><%= event.date %></td>
+            <td><%= event.location %></td>
+            <td><%= event.state %></td>
+            <td><%= event.user.first_name %></td>
+            <% if event.users.include? current_user %>
+                <td>Joining <a href="/events/<%= event.id %>/delete" rel="nofollow" data-method="delete">Cancel</a></td>
+    
+            <% elsif event.user==current_user %>
+                <td><a href="/events/<%= event.id %>" rel="nofollow" data-method="delete">Delete</a></td>
+            <%else%>
+                <td><a href="/events/<%= event.id %>/join" rel="nofollow" data-method="post">Join</a></td>
+            
+            <%end%>
+    </tr>
+        <% end %>
+</table>
+
+
+<h2>Add Event</h2>
+    <form action="/events/create" method="post">
+        <input type = 'hidden' name = "authenticity_token" value = "<%=form_authenticity_token%>">
+        <input type = 'hidden' name="event[user_id]" value="<%= current_user.id %>">
+        <p>Name: <input type="text" name="event[name]"></p>
+        <p>Date: <input type="date" name="event[date]"></p>   
+        <p>Location: <input type="text" name="event[location]"></p>
+        <p>State: <input type="text" name="event[state]"></p>
+        <input type="submit" value="Add Event">
+    </form>

@@ -1,0 +1,39 @@
+<%= stylesheet_link_tag "main.scss" %>
+<div>
+    <h1><%= @event.name %></h1>
+    <h3>Host: <%= @event.user.first_name %></h3>
+    <h3>Date: <%= @event.date %></h3>
+    <h3>Location: <%= @event.location %>, <%= @event.state %></h3>
+    <h3>People who are joining the event: <%= @attending.count %></h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>State</th>
+        </tr>
+        <tr>
+            <% @attending.each do |attend| %>
+            <td><%= attend.user.first_name%> <%= attend.user.last_name%></td>
+            <td><%= attend.user.location %></td>
+            <td><%= attend.user.state%></td>
+        </tr>
+        <% end %>
+    </table>
+</div>
+<a href="/events">Events Dashboard</a>
+<div class="messages">
+    <h3>Discussion about this event</h3>
+
+    <% @message.each do |message| %>
+    <p><%= message.user.first_name %> says: <%= message.content%></p>
+    <hr>
+    <% end %>
+    
+    <h3>Add Comment</h3>
+    <form action="/message/<%= @event.id %>" method="post">
+        <input type = 'hidden' name = "authenticity_token" value = "<%=form_authenticity_token%>">
+        <textarea name="content"></textarea>
+        <p><input type="submit" value="Submit Comments"></p>
+    </form>
+</div>
+
